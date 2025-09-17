@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCA Workshop - Affiliate Product Example</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background-attachment: fixed;
+        }
+
+        /* Dark overlay AI background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('imgs/background.png') no-repeat center center / cover;
+            opacity: 0.25;
+            z-index: -1;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(6px);
+        }
+
+        header .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        header .logo img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        header .niche-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1rem;
+            background: #ff5733;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        header .niche-btn:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        .content-box {
+            max-width: 650px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 30px 25px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 22px;
+            margin: 6px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            color: #fff;
+            background: #ff5733;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.6);
+            text-align: center;
+            padding: 12px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Floating affiliate button */
+        #affiliateBtn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 14px 22px;
+            background: #00b894;
+            color: #fff;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1500;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Modal style */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content iframe,
+        .modal-content img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #fff;
+            z-index: 100;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <img src="https://cdn-icons-png.flaticon.com/512/2721/2721299.png" alt="Workshop Logo">
+            BCA Workshop
+        </div>
+        <button class="niche-btn" id="nicheBtn">🎯 Niche Product</button>
+    </header>
+
+    <main>
+        <div class="content-box">
+            <h1>FastAPI Product Example</h1>
+            <p>Learn APIs effectively while exploring this affiliate product as an example for your BCA workshop.</p>
+            <div>
+                <button class="btn" data-url="https://fastapi.tiangolo.com/">Docs</button>
+                <button class="btn" id="videoAdBtn">🎥 Intro Video</button>
+                <button class="btn" id="formBtn">📝 Register</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>&copy; 2025 BCA Workshop. All Rights Reserved.</footer>
+
+    <!-- Floating Affiliate Button -->
+    <button id="affiliateBtn">💼 Affiliate Links</button>
+
+    <!-- Niche Modal -->
+    <div class="modal" id="nicheModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeNiche">&times;</span>
+            <img src="https://via.placeholder.com/800x600.png?text=Niche+Product+Template" alt="Niche Product">
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeVideo">&times;</span>
+            <iframe id="youtubeFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- Google Form Modal -->
+    <div class="modal" id="formModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeForm">&times;</span>
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfakeFormLink/viewform?embedded=true"></iframe>
+        </div>
+    </div>
+
+    <!-- Affiliate Modal -->
+    <div class="modal" id="affiliateModal">
+        <div class="modal-content" style="flex-direction: column;">
+            <span class="close-btn" id="closeAffiliate">&times;</span>
+            <h2 style="margin-bottom:20px;">Affiliate Products</h2>
+            <ul style="list-style:none; padding:0; text-align:left;">
+                <li><a href="https://www.amazon.in" target="_blank" style="color:#00b894;text-decoration:none;">Amazon
+                        Affiliate</a></li>
+                <li><a href="https://www.flipkart.com" target="_blank"
+                        style="color:#00b894;text-decoration:none;">Flipkart Affiliate</a></li>
+                <li><a href="https://www.hostinger.in" target="_blank"
+                        style="color:#00b894;text-decoration:none;">Hostinger Affiliate</a></li>
+                <li><a href="https://www.udemy.com" target="_blank" style="color:#00b894;text-decoration:none;">Udemy
+                        Courses</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // External links
+        document.querySelectorAll('.btn[data-url]').forEach(btn => {
+            btn.addEventListener('click', () => window.open(btn.getAttribute('data-url'), '_blank'));
+        });
+
+        // Video Modal
+        const videoBtn = document.getElementById("videoAdBtn");
+        const videoModal = document.getElementById("videoModal");
+        const closeVideo = document.getElementById("closeVideo");
+        const youtubeFrame = document.getElementById("youtubeFrame");
+        videoBtn.addEventListener("click", () => { videoModal.style.display = "flex"; youtubeFrame.src = "https://www.youtube.com/embed/urR596FsU68?autoplay=1"; });
+        closeVideo.addEventListener("click", () => { videoModal.style.display = "none"; youtubeFrame.src = ""; });
+
+        // Niche Modal
+        const nicheBtn = document.getElementById("nicheBtn");
+        const nicheModal = document.getElementById("nicheModal");
+        const closeNiche = document.getElementById("closeNiche");
+        nicheBtn.addEventListener("click", () => nicheModal.style.display = "flex");
+        closeNiche.addEventListener("click", () => nicheModal.style.display = "none");
+
+        // Form Modal
+        const formBtn = document.getElementById("formBtn");
+        const formModal = document.getElementById("formModal");
+        const closeForm = document.getElementById("closeForm");
+        formBtn.addEventListener("click", () => formModal.style.display = "flex");
+        closeForm.addEventListener("click", () => formModal.style.display = "none");
+
+        // Affiliate Modal
+        const affiliateBtn = document.getElementById("affiliateBtn");
+        const affiliateModal = document.getElementById("affiliateModal");
+        const closeAffiliate = document.getElementById("closeAffiliate");
+        affiliateBtn.addEventListener("click", () => affiliateModal.style.display = "flex");
+        closeAffiliate.addEventListener("click", () => affiliateModal.style.display = "none");
+
+        // Close modals when clicking outside
+        window.addEventListener("click", e => {
+            if (e.target === videoModal) { videoModal.style.display = "none"; youtubeFrame.src = ""; }
+            if (e.target === nicheModal) nicheModal.style.display = "none";
+            if (e.target === formModal) formModal.style.display = "none";
+            if (e.target === affiliateModal) affiliateModal.style.display = "none";
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCA 1st Year FastAPI Workshop</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background-attachment: fixed;
+        }
+
+        /* Dark overlay with AI tech background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('imgs/background.png') no-repeat center center / cover;
+            opacity: 0.25;
+            z-index: -1;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(6px);
+        }
+
+        header .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        header .logo img {
+            width: 35px;
+            height: 35px;
+            margin-right: 8px;
+        }
+
+        header .niche-btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            background: #ff5733;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        header .niche-btn:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        .content-box {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 30px 25px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 22px;
+            margin: 6px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            color: #fff;
+            background: #ff5733;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.6);
+            text-align: center;
+            padding: 12px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Fullscreen Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .modal-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #fff;
+            z-index: 100;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="https://khanriyazi.github.io/Graphic-Designer/" style="text-decoration: none;">
+            <div style="
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #4CAF50, #2E7D32);
+        color: white;
+        font-weight: bold;
+        font-size: 18px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+        width: fit-content;
+    " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 10px rgba(0,0,0,0.3)';"
+                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.2)';">
+                <img src="imgs/logo.png" alt="Workshop Logo" style="height:40px; width:auto;">
+                BCA Workshop
+            </div>
+        </a>
+
+
+        <button class="niche-btn" id="nicheBtn">🎯 Niche Template</button>
+    </header>
+
+    <main>
+        <div class="content-box">
+            <h1>FastAPI Workshop</h1>
+            <p>For BCA 1st Year Students – Learn APIs with Hands-on Practice</p>
+            <div>
+                <button class="btn" data-url="https://fastapi.tiangolo.com/">Docs</button>
+                <button class="btn" id="videoAdBtn">🎥 Intro Video</button>
+                <button class="btn" id="formBtn">📝 Register</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2025 BCA Workshop. All Rights Reserved.
+    </footer>
+
+    <!-- YouTube Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeVideo">&times;</span>
+            <iframe id="youtubeFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- Niche Modal -->
+    <!-- Niche Modal -->
+    <div class="modal" id="nicheModal">
+        <div class="modal-content" style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 20px;
+    ">
+            <span class="close-btn" id="closeNiche">&times;</span>
+            <img src="imgs/background.png" alt="Niche Template" style="
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        ">
+        </div>
+    </div>
+
+
+    <!-- Google Form Modal -->
+    <div class="modal" id="formModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeForm">&times;</span>
+            <iframe
+                src="https://docs.google.com/forms/d/e/1FAIpQLScQtwHDBt8MjhdQiblobIkaSaUOrB7vLK4a_xpg5hgnwYg2QQ/viewform?usp=sharing&ouid=114327715657916202451?embedded=true"
+                width="100%" height="600" frameborder="0" marginheight="0" marginwidth="0"
+                style="border:none; border-radius:12px;">
+            </iframe>
+        </div>
+    </div>
+
+    <!-----------------------affiliate pop up---------------------->
+    <!-- Affiliate Marketing Button -->
+    <!-- Affiliate Marketing Button -->
+    <button id="affiliateBtn" style="
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    padding: 16px 24px;
+    background: #00b894;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    z-index: 1500;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+">💼 Explore Affiliate Deals</button>
+
+    <!-- Affiliate Modal -->
+    <div class="modal" id="affiliateModal" style="
+    display:none;
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.85);
+    justify-content:center;
+    align-items:center;
+    z-index:2000;
+    animation: fadeIn 0.3s ease;
+">
+        <div style="
+        background: #111;
+        padding: 25px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+        position: relative;
+        transform: scale(0.8);
+        animation: popUp 0.4s forwards;
+    ">
+            <!-- Close button -->
+            <span id="closeAffiliate" style="
+            position:absolute;
+            top:12px;
+            right:15px;
+            font-size:1.8rem;
+            cursor:pointer;
+            color:#fff;
+        ">&times;</span>
+
+            <!-- Brand Logo
+            <img src="https://cdn-icons-png.flaticon.com/512/2721/2721299.png" alt="Workshop Logo"
+                style="width:60px; margin-bottom:15px;"> -->
+
+            <!-- Headline -->
+            <h2 style="color:#fff; margin-bottom:15px;">Top Affiliate Deals for Workshop Students!</h2>
+
+            <!-- Product Image -->
+            <img src="imgs/background.png" alt="Product Example"
+                style="width:90%; max-width:400px; max-height:310px; object-fit:cover; border-radius:12px; margin-bottom:15px;">
+
+
+            <!-- Short Description -->
+            <p style="color:#fff; font-size:0.95rem; margin-bottom:20px;">
+                Grab these amazing deals to enhance your learning with FastAPI, Web Development & Tech tools.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div style="display:flex; flex-direction:column; gap:10px; align-items:center;">
+                <a href="https://www.amazon.in" target="_blank" style="
+                background:#00b894; color:#fff; text-decoration:none;
+                padding:12px 25px; border-radius:25px; display:inline-block;
+                width:80%; text-align:center; transition:transform 0.3s ease;
+            " class="cta-btn">Amazon Deals</a>
+
+                <a href="https://www.udemy.com" target="_blank" style="
+                background:#6c5ce7; color:#fff; text-decoration:none;
+                padding:12px 25px; border-radius:25px; display:inline-block;
+                width:80%; text-align:center; transition:transform 0.3s ease;
+            " class="cta-btn">Udemy Courses</a>
+
+                <a href="https://www.hostinger.in" target="_blank" style="
+                background:#fdcb6e; color:#111; text-decoration:none;
+                padding:12px 25px; border-radius:25px; display:inline-block;
+                width:80%; text-align:center; transition:transform 0.3s ease;
+            " class="cta-btn">Hostinger Hosting</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const affiliateBtn = document.getElementById("affiliateBtn");
+        const affiliateModal = document.getElementById("affiliateModal");
+        const closeAffiliate = document.getElementById("closeAffiliate");
+
+        affiliateBtn.addEventListener("click", () => {
+            affiliateModal.style.display = "flex";
+        });
+
+        closeAffiliate.addEventListener("click", () => {
+            affiliateModal.style.display = "none";
+        });
+
+        window.addEventListener("click", e => {
+            if (e.target === affiliateModal) affiliateModal.style.display = "none";
+        });
+
+        // Suspensive hover effect
+        affiliateBtn.addEventListener("mouseenter", () => {
+            affiliateBtn.style.transform = "translateY(-6px) scale(1.1)";
+            affiliateBtn.style.boxShadow = "0 12px 25px rgba(0,0,0,0.4)";
+        });
+        affiliateBtn.addEventListener("mouseleave", () => {
+            affiliateBtn.style.transform = "";
+            affiliateBtn.style.boxShadow = "0 6px 18px rgba(0,0,0,0.35)";
+        });
+
+        document.querySelectorAll('.cta-btn').forEach(btn => {
+            btn.addEventListener("mouseenter", () => btn.style.transform = "translateY(-4px) scale(1.05)");
+            btn.addEventListener("mouseleave", () => btn.style.transform = "scale(1)");
+        });
+    </script>
+
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes popUp {
+            from {
+                transform: scale(0.8);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+    </style>
+
+
+    <!-----------------------affiliate pop up---------------------->
+
+    <script>
+        // External links
+        document.querySelectorAll('.btn[data-url]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.open(btn.getAttribute('data-url'), '_blank');
+            });
+        });
+
+        // Video modal
+        const videoBtn = document.getElementById("videoAdBtn");
+        const videoModal = document.getElementById("videoModal");
+        const closeVideo = document.getElementById("closeVideo");
+        const youtubeFrame = document.getElementById("youtubeFrame");
+
+        videoBtn.addEventListener("click", () => {
+            videoModal.style.display = "flex";
+            youtubeFrame.src = "https://www.youtube.com/embed/urR596FsU68?autoplay=1";
+        });
+        closeVideo.addEventListener("click", () => {
+            videoModal.style.display = "none";
+            youtubeFrame.src = "";
+        });
+
+        // Niche modal
+        const nicheBtn = document.getElementById("nicheBtn");
+        const nicheModal = document.getElementById("nicheModal");
+        const closeNiche = document.getElementById("closeNiche");
+
+        nicheBtn.addEventListener("click", () => {
+            nicheModal.style.display = "flex";
+        });
+        closeNiche.addEventListener("click", () => {
+            nicheModal.style.display = "none";
+        });
+
+        // Form modal
+        const formBtn = document.getElementById("formBtn");
+        const formModal = document.getElementById("formModal");
+        const closeForm = document.getElementById("closeForm");
+
+        formBtn.addEventListener("click", () => {
+            formModal.style.display = "flex";
+        });
+        closeForm.addEventListener("click", () => {
+            formModal.style.display = "none";
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener("click", e => {
+            if (e.target === videoModal) { videoModal.style.display = "none"; youtubeFrame.src = ""; }
+            if (e.target === nicheModal) nicheModal.style.display = "none";
+            if (e.target === formModal) formModal.style.display = "none";
+        });
+    </script>
+</body>
+
+</html>
