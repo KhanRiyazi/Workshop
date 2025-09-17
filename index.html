@@ -181,6 +181,72 @@
 </head>
 
 <body>
+    <!---------------left bottom ?------------------>
+    <!-- Help Button -->
+    <div id="helpButton" style="position: fixed; bottom: 20px; left: 20px; 
+            background: #007bff; color: #fff; 
+            border-radius: 50%; width: 50px; height: 50px; 
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; font-size: 22px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index:1000;">
+        ?
+    </div>
+
+    <!-- Popup -->
+    <div id="popup" style="display: none; position: fixed; bottom: 90px; left: 20px; 
+            max-width: 320px; background: #fff; border-radius: 8px; 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3); 
+            font-family: Arial, sans-serif; z-index:999;">
+
+        <div style="display: flex; justify-content: space-between; 
+                align-items: center; background: #007bff; 
+                color: #fff; padding: 10px; border-radius: 8px 8px 0 0;">
+            <h3 style="margin: 0; font-size: 16px;">About FastAPI</h3>
+            <button id="closePopup" style="background: none; border: none; color: #fff; 
+                       font-size: 18px; cursor: pointer;">&times;</button>
+        </div>
+
+        <div style="padding: 12px; font-size: 14px; color: #333; max-height: 300px; overflow-y: auto;">
+            <p><strong>FastAPI</strong> is a modern, fast (high-performance) web framework for building APIs with Python
+                3.7+ based on standard Python type hints.</p>
+            <p>It's one of the fastest Python frameworks available, on par with NodeJS and Go thanks to Starlette and
+                Pydantic.</p>
+        </div>
+
+        <div style="padding: 10px; text-align: right;">
+            <button id="learnMoreBtn" style="background: #007bff; color: #fff; 
+                       border: none; padding: 6px 12px; 
+                       border-radius: 4px; cursor: pointer;">Learn More</button>
+        </div>
+    </div>
+
+    <!-- Inline Vanilla JS -->
+    <script>
+        const helpButton = document.getElementById("helpButton");
+        const popup = document.getElementById("popup");
+        const closePopup = document.getElementById("closePopup");
+        const learnMoreBtn = document.getElementById("learnMoreBtn");
+
+        helpButton.addEventListener("click", () => {
+            popup.style.display = "block";
+
+            // Ensure popup fits within screen width
+            const rect = popup.getBoundingClientRect();
+            if (rect.right > window.innerWidth) {
+                popup.style.left = (window.innerWidth - rect.width - 20) + "px";
+            }
+        });
+
+        closePopup.addEventListener("click", () => {
+            popup.style.display = "none";
+        });
+
+        learnMoreBtn.addEventListener("click", () => {
+            window.open("main.html", "_blank");
+        });
+    </script>
+
+    <!---------------left bottom ?------------------>
     <header>
         <a href="https://khanriyazi.github.io/Graphic-Designer/" style="text-decoration: none;">
             <div style="

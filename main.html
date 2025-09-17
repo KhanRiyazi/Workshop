@@ -4,318 +4,815 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCA Workshop - Affiliate Product Example</title>
+    <title>FastAPI - Modern Web APIs Quickly</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
+        :root {
+            --primary: #009485;
+            --primary-dark: #007a6e;
+            --secondary: #373737;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --code-bg: #0c0c0c;
+        }
+
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
-            color: #fff;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: var(--dark);
+            line-height: 1.6;
+            background-color: white;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-            background-attachment: fixed;
+            position: relative;
         }
 
-        /* Dark overlay AI background */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
+        .container {
             width: 100%;
-            height: 100%;
-            background: url('imgs/background.png') no-repeat center center / cover;
-            opacity: 0.25;
-            z-index: -1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
+        /* Header & Navigation */
         header {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 12px 25px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(6px);
+            padding: 20px 0;
         }
 
-        header .logo {
-            font-size: 1.4rem;
-            font-weight: bold;
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
             display: flex;
             align-items: center;
         }
 
-        header .logo img {
-            width: 40px;
-            height: 40px;
+        .logo i {
             margin-right: 10px;
         }
 
-        header .niche-btn {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 20px;
-            font-size: 1rem;
-            background: #ff5733;
-            color: #fff;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        header .niche-btn:hover {
-            transform: translateY(-6px) scale(1.05);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        main {
-            flex: 1;
+        .nav-links {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 30px 15px;
+            list-style: none;
         }
 
-        .content-box {
-            max-width: 650px;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(10px);
-            border-radius: 18px;
-            padding: 30px 25px;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        .nav-links li {
+            margin-left: 30px;
         }
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 15px;
+        .nav-links a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 500;
+            transition: color 0.3s;
         }
 
-        p {
-            font-size: 1.1rem;
-            margin-bottom: 25px;
+        .nav-links a:hover {
+            color: var(--primary);
         }
 
         .btn {
             display: inline-block;
-            padding: 12px 22px;
-            margin: 6px;
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s, transform 0.2s;
             border: none;
-            border-radius: 25px;
-            font-size: 0.95rem;
-            color: #fff;
-            background: #ff5733;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         .btn:hover {
-            transform: translateY(-6px) scale(1.05);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
         }
 
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        footer {
-            background: rgba(0, 0, 0, 0.6);
+        /* Hero Section */
+        .hero {
+            padding: 150px 0 100px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             text-align: center;
-            padding: 12px;
-            font-size: 0.85rem;
-            backdrop-filter: blur(4px);
         }
 
-        /* Floating affiliate button */
-        #affiliateBtn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 14px 22px;
-            background: #00b894;
-            color: #fff;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            z-index: 1500;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
         }
 
-        /* Modal style */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--gray);
+        }
+
+        .hero-buttons {
+            display: flex;
             justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
+            gap: 15px;
+            margin-top: 30px;
         }
 
-        .modal-content {
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        /* Video Section */
+        .video-section {
+            padding: 100px 0;
+            background-color: var(--light-gray);
+            text-align: center;
+        }
+
+        .video-container {
             position: relative;
             width: 100%;
-            height: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 450px;
+            border: none;
+        }
+
+        /* Code Example Section */
+        .code-example {
+            padding: 100px 0;
+            background-color: white;
+        }
+
+        .code-container {
+            background-color: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .code-header {
+            background-color: #2d2d2d;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .dot-red {
+            background-color: #ff5f56;
+        }
+
+        .dot-yellow {
+            background-color: #ffbd2e;
+        }
+
+        .dot-green {
+            background-color: #27c93f;
+        }
+
+        .code-content {
+            padding: 25px;
+            color: white;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+            overflow-x: auto;
+            font-size: 1rem;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        .code-keyword {
+            color: #c586c0;
+        }
+
+        .code-function {
+            color: #dcdcaa;
+        }
+
+        .code-param {
+            color: #9cdcfe;
+        }
+
+        .code-string {
+            color: #ce9178;
+        }
+
+        .code-type {
+            color: #4ec9b0;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            font-size: 1.1rem;
+        }
+
+        .btn-light {
+            background-color: white;
+            color: var(--primary);
+        }
+
+        .btn-light:hover {
+            background-color: var(--light);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary);
+            color: white;
+            padding: 50px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        /* Help Button */
+        .help-button {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+            background-color: var(--primary-dark);
+        }
+
+        /* Popup */
+        .popup {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            left: 25px;
+            width: 350px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .popup-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .popup-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .close-popup {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .popup-content {
             padding: 20px;
         }
 
-        .modal-content iframe,
-        .modal-content img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        .popup-content p {
+            margin-bottom: 15px;
+            color: var(--secondary);
         }
 
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #fff;
-            z-index: 100;
+        .popup-footer {
+            padding: 15px 20px;
+            background: var(--light-gray);
+            text-align: right;
         }
 
         @keyframes fadeIn {
             from {
-                opacity: 0
+                opacity: 0;
+                transform: translateY(20px);
             }
 
             to {
-                opacity: 1
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .video-container iframe {
+                height: 250px;
+            }
+
+            .popup {
+                width: calc(100% - 50px);
+                left: 25px;
+            }
+
+            .help-button {
+                bottom: 15px;
+                left: 15px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
 
 <body>
+    <!-- Help Button -->
+    <div class="help-button" id="helpButton">
+        <i class="fas fa-question"></i>
+    </div>
 
-    <header>
-        <div class="logo">
-            <img src="https://cdn-icons-png.flaticon.com/512/2721/2721299.png" alt="Workshop Logo">
-            BCA Workshop
+    <!-- Popup -->
+    <div class="popup" id="popup">
+        <div class="popup-header">
+            <h3>About FastAPI</h3>
+            <button class="close-popup" id="closePopup">&times;</button>
         </div>
-        <button class="niche-btn" id="nicheBtn">🎯 Niche Product</button>
+        <div class="popup-content">
+            <p><strong>FastAPI</strong> is a modern, fast (high-performance) web framework for building APIs with Python
+                3.7+ based on standard Python type hints.</p>
+            <p>It's one of the fastest Python frameworks available, on par with NodeJS and Go thanks to Starlette and
+                Pydantic.</p>
+        </div>
+        <div class="popup-footer">
+            <button class="btn" id="learnMoreBtn">Learn More</button>
+        </div>
+    </div>
+
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-bolt"></i>
+                    FastAPI
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#code">Code Example</a></li>
+                    <li><a href="#video">Demo</a></li>
+                    <li><a href="#docs">Documentation</a></li>
+                    <li><a href="#" class="btn">Get Started</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <div class="content-box">
-            <h1>FastAPI Product Example</h1>
-            <p>Learn APIs effectively while exploring this affiliate product as an example for your BCA workshop.</p>
-            <div>
-                <button class="btn" data-url="https://fastapi.tiangolo.com/">Docs</button>
-                <button class="btn" id="videoAdBtn">🎥 Intro Video</button>
-                <button class="btn" id="formBtn">📝 Register</button>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>FastAPI: Modern Python Web APIs</h1>
+            <p>FastAPI is a modern, fast (high-performance), web framework for building APIs with Python 3.7+ based on
+                standard Python type hints.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn">Get Started</a>
+                <a href="#video" class="btn btn-outline">Watch Demo</a>
             </div>
         </div>
-    </main>
+    </section>
 
-    <footer>&copy; 2025 BCA Workshop. All Rights Reserved.</footer>
-
-    <!-- Floating Affiliate Button -->
-    <button id="affiliateBtn">💼 Affiliate Links</button>
-
-    <!-- Niche Modal -->
-    <div class="modal" id="nicheModal">
-        <div class="modal-content">
-            <span class="close-btn" id="closeNiche">&times;</span>
-            <img src="https://via.placeholder.com/800x600.png?text=Niche+Product+Template" alt="Niche Product">
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why FastAPI?</h2>
+                <p>FastAPI gives you the best of modern web framework performance and developer experience</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fast to Code</h3>
+                    <p>Increase development speed by 200% to 300% with automatic interactive documentation.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>High Performance</h3>
+                    <p>One of the fastest Python frameworks available, on par with NodeJS and Go thanks to Starlette and
+                        Pydantic.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Robust</h3>
+                    <p>Get production-ready code with automatic interactive documentation based on OpenAPI and JSON
+                        Schema.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>Standards-Based</h3>
+                    <p>Based on (and fully compatible with) the open standards for APIs: OpenAPI and JSON Schema.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧩</div>
+                    <h3>Easy to Learn</h3>
+                    <p>Designed to be easy to use and learn with comprehensive documentation and tutorials.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Fewer Bugs</h3>
+                    <p>Reduce human-induced errors by 40% with automatic data validation and serialization.</p>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Video Modal -->
-    <div class="modal" id="videoModal">
-        <div class="modal-content">
-            <span class="close-btn" id="closeVideo">&times;</span>
-            <iframe id="youtubeFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <!-- Video Section -->
+    <section class="video-section" id="video">
+        <div class="container">
+            <div class="section-title">
+                <h2>See FastAPI in Action</h2>
+                <p>Watch this introduction to see how FastAPI can help you build APIs quickly</p>
+            </div>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/7t2alSnE2-I?rel=0" title="FastAPI Tutorial"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Google Form Modal -->
-    <div class="modal" id="formModal">
-        <div class="modal-content">
-            <span class="close-btn" id="closeForm">&times;</span>
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfakeFormLink/viewform?embedded=true"></iframe>
-        </div>
-    </div>
+    <!-- Code Example Section -->
+    <section class="code-example" id="code">
+        <div class="container">
+            <div class="section-title">
+                <h2>Simple Code Example</h2>
+                <p>See how easy it is to create powerful APIs with minimal code</p>
+            </div>
+            <div class="code-container">
+                <div class="code-header">
+                    <div class="code-dot dot-red"></div>
+                    <div class="code-dot dot-yellow"></div>
+                    <div class="code-dot dot-green"></div>
+                    <span style="margin-left: 10px; color: #ccc;">main.py</span>
+                </div>
+                <div class="code-content">
+                    <pre><code><span class="code-keyword">from</span> fastapi <span class="code-keyword">import</span> FastAPI
+<span class="code-keyword">from</span> pydantic <span class="code-keyword">import</span> BaseModel
+<span class="code-keyword">from</span> typing <span class="code-keyword">import</span> Optional
 
-    <!-- Affiliate Modal -->
-    <div class="modal" id="affiliateModal">
-        <div class="modal-content" style="flex-direction: column;">
-            <span class="close-btn" id="closeAffiliate">&times;</span>
-            <h2 style="margin-bottom:20px;">Affiliate Products</h2>
-            <ul style="list-style:none; padding:0; text-align:left;">
-                <li><a href="https://www.amazon.in" target="_blank" style="color:#00b894;text-decoration:none;">Amazon
-                        Affiliate</a></li>
-                <li><a href="https://www.flipkart.com" target="_blank"
-                        style="color:#00b894;text-decoration:none;">Flipkart Affiliate</a></li>
-                <li><a href="https://www.hostinger.in" target="_blank"
-                        style="color:#00b894;text-decoration:none;">Hostinger Affiliate</a></li>
-                <li><a href="https://www.udemy.com" target="_blank" style="color:#00b894;text-decoration:none;">Udemy
-                        Courses</a></li>
-            </ul>
+<span class="code-comment"># Create FastAPI instance</span>
+app = FastAPI()
+
+<span class="code-comment"># Define data model</span>
+<span class="code-keyword">class</span> <span class="code-type">Item</span>(BaseModel):
+    name: str
+    price: float
+    is_offer: Optional[bool] = <span class="code-keyword">None</span>
+
+<span class="code-comment"># Simple GET endpoint</span>
+@app.get(<span class="code-string">"/"</span>)
+<span class="code-keyword">async def</span> <span class="code-function">read_root</span>():
+    <span class="code-keyword">return</span> {<span class="code-string">"Hello"</span>: <span class="code-string">"World"</span>}
+
+<span class="code-comment"># GET with path parameter</span>
+@app.get(<span class="code-string">"/items/{item_id}"</span>)
+<span class="code-keyword">async def</span> <span class="code-function">read_item</span>(item_id: int, q: Optional[str] = <span class="code-keyword">None</span>):
+    <span class="code-keyword">return</span> {<span class="code-string">"item_id"</span>: item_id, <span class="code-string">"query"</span>: q}
+
+<span class="code-comment"># POST endpoint with request body</span>
+@app.put(<span class="code-string">"/items/{item_id}"</span>)
+<span class="code-keyword">async def</span> <span class="code-function">update_item</span>(item_id: int, item: Item):
+    <span class="code-keyword">return</span> {<span class="code-string">"item_name"</span>: item.name, <span class="code-string">"item_id"</span>: item_id}</code></pre>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="cta">
+        <div class="container">
+            <h2>Ready to build fast APIs?</h2>
+            <p>Join thousands of developers building high-performance APIs with FastAPI</p>
+            <a href="#" class="btn btn-light">Get Started Now</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>FastAPI</h3>
+                    <p>Modern, fast web framework for building APIs with Python.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Documentation</a></li>
+                        <li><a href="#">Tutorials</a></li>
+                        <li><a href="#">Courses</a></li>
+                        <li><a href="#">Examples</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Community</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">Discord</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Stack Overflow</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>About</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Sponsors</a></li>
+                        <li><a href="#">Contributing</a></li>
+                        <li><a href="#">Release Notes</a></li>
+                        <li><a href="#">Code of Conduct</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 FastAPI. All rights reserved. Licensed under MIT.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // External links
-        document.querySelectorAll('.btn[data-url]').forEach(btn => {
-            btn.addEventListener('click', () => window.open(btn.getAttribute('data-url'), '_blank'));
+        // Help button functionality
+        const helpButton = document.getElementById('helpButton');
+        const popup = document.getElementById('popup');
+        const closePopup = document.getElementById('closePopup');
+        const learnMoreBtn = document.getElementById('learnMoreBtn');
+
+        helpButton.addEventListener('click', () => {
+            popup.style.display = 'block';
         });
 
-        // Video Modal
-        const videoBtn = document.getElementById("videoAdBtn");
-        const videoModal = document.getElementById("videoModal");
-        const closeVideo = document.getElementById("closeVideo");
-        const youtubeFrame = document.getElementById("youtubeFrame");
-        videoBtn.addEventListener("click", () => { videoModal.style.display = "flex"; youtubeFrame.src = "https://www.youtube.com/embed/urR596FsU68?autoplay=1"; });
-        closeVideo.addEventListener("click", () => { videoModal.style.display = "none"; youtubeFrame.src = ""; });
-
-        // Niche Modal
-        const nicheBtn = document.getElementById("nicheBtn");
-        const nicheModal = document.getElementById("nicheModal");
-        const closeNiche = document.getElementById("closeNiche");
-        nicheBtn.addEventListener("click", () => nicheModal.style.display = "flex");
-        closeNiche.addEventListener("click", () => nicheModal.style.display = "none");
-
-        // Form Modal
-        const formBtn = document.getElementById("formBtn");
-        const formModal = document.getElementById("formModal");
-        const closeForm = document.getElementById("closeForm");
-        formBtn.addEventListener("click", () => formModal.style.display = "flex");
-        closeForm.addEventListener("click", () => formModal.style.display = "none");
-
-        // Affiliate Modal
-        const affiliateBtn = document.getElementById("affiliateBtn");
-        const affiliateModal = document.getElementById("affiliateModal");
-        const closeAffiliate = document.getElementById("closeAffiliate");
-        affiliateBtn.addEventListener("click", () => affiliateModal.style.display = "flex");
-        closeAffiliate.addEventListener("click", () => affiliateModal.style.display = "none");
-
-        // Close modals when clicking outside
-        window.addEventListener("click", e => {
-            if (e.target === videoModal) { videoModal.style.display = "none"; youtubeFrame.src = ""; }
-            if (e.target === nicheModal) nicheModal.style.display = "none";
-            if (e.target === formModal) formModal.style.display = "none";
-            if (e.target === affiliateModal) affiliateModal.style.display = "none";
+        closePopup.addEventListener('click', () => {
+            popup.style.display = 'none';
         });
+
+        learnMoreBtn.addEventListener('click', () => {
+            // Redirect to main.html or show more info
+            window.location.href = 'main.html';
+        });
+
+        // Close popup when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                popup.style.display = 'none';
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Header background change on scroll
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Feature card animation on scroll
+        const featureCards = document.querySelectorAll('.feature-card');
+
+        function checkScroll() {
+            featureCards.forEach(card => {
+                const cardPosition = card.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+
+                if (cardPosition < screenPosition) {
+                    card.style.opacity = 1;
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        }
+
+        // Initialize feature cards with opacity 0 for animation
+        featureCards.forEach(card => {
+            card.style.opacity = 0;
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        });
+
+        window.addEventListener('scroll', checkScroll);
+        checkScroll(); // Check on initial load
     </script>
-
 </body>
 
 </html>
