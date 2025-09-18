@@ -5,16 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BCA 1st Year FastAPI Workshop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #ff5733;
+            --secondary: #00b894;
+            --accent: #6c5ce7;
+            --dark: #0f2027;
+            --light: #ffffff;
+            --gray: #f1f1f1;
+            --dark-transparent: rgba(0, 0, 0, 0.6);
+            --darker-transparent: rgba(0, 0, 0, 0.75);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #fff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             background-attachment: fixed;
+            position: relative;
+            overflow-x: hidden;
         }
 
         /* Dark overlay with AI tech background */
@@ -30,6 +50,7 @@
             z-index: -1;
         }
 
+        /* Header Styles */
         header {
             background: rgba(0, 0, 0, 0.6);
             padding: 12px 25px;
@@ -42,35 +63,292 @@
             backdrop-filter: blur(6px);
         }
 
-        header .logo {
-            font-size: 1.3rem;
-            font-weight: bold;
+        .header-left {
             display: flex;
             align-items: center;
+            gap: 20px;
         }
 
-        header .logo img {
-            width: 35px;
-            height: 35px;
-            margin-right: 8px;
-        }
-
-        header .niche-btn {
-            padding: 8px 18px;
-            border: none;
-            border-radius: 20px;
-            font-size: 0.95rem;
-            background: #ff5733;
-            color: #fff;
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
             cursor: pointer;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            width: fit-content;
+            text-decoration: none;
         }
 
-        header .niche-btn:hover {
-            transform: translateY(-6px) scale(1.05);
+        .logo-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo-container img {
+            height: 40px;
+            width: auto;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .social-media-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #8a2387, #e94057, #f27121);
+            color: var(--light);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .social-media-btn:hover {
+            transform: translateY(-6px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
         }
 
+        .ai-importance-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: var(--light);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-importance-btn:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .niche-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            background: var(--primary);
+            color: var(--light);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .niche-btn:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Mobile menu button */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 10;
+        }
+
+        .menu-toggle span {
+            width: 100%;
+            height: 3px;
+            background: var(--light);
+            border-radius: 5px;
+            transition: all 0.3s linear;
+            position: relative;
+            transform-origin: 1px;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            height: 100vh;
+            background: var(--darker-transparent);
+            backdrop-filter: blur(10px);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            transition: right 0.3s ease;
+            z-index: 200;
+            padding: 20px;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .mobile-social-btn,
+        .mobile-niche-btn,
+        .mobile-ai-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            color: var(--light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .mobile-social-btn {
+            background: linear-gradient(135deg, #8a2387, #e94057, #f27121);
+        }
+
+        .mobile-niche-btn {
+            background: var(--primary);
+        }
+
+        .mobile-ai-btn {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+        }
+
+        .close-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--light);
+            cursor: pointer;
+        }
+
+        /* Social Media Popup */
+        .social-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--darker-transparent);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .social-popup-content {
+            text-align: center;
+        }
+
+        .social-popup h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: var(--light);
+        }
+
+        .social-icons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .social-icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .social-icon-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .social-icon-item i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .social-icon-item span {
+            font-size: 0.9rem;
+            color: var(--light);
+        }
+
+        .facebook-icon {
+            color: #3b5998;
+        }
+
+        .twitter-icon {
+            color: #1da1f2;
+        }
+
+        .instagram-icon {
+            color: #e4405f;
+        }
+
+        .linkedin-icon {
+            color: #0077b5;
+        }
+
+        .youtube-icon {
+            color: #ff0000;
+        }
+
+        .whatsapp-icon {
+            color: #25d366;
+        }
+
+        .close-social {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: var(--light);
+            cursor: pointer;
+        }
+
+        /* Main Content */
         main {
             flex: 1;
             display: flex;
@@ -80,7 +358,7 @@
         }
 
         .content-box {
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
             background: rgba(0, 0, 0, 0.55);
             backdrop-filter: blur(10px);
@@ -88,34 +366,50 @@
             padding: 30px 25px;
             text-align: center;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease;
         }
 
         h1 {
-            font-size: 2rem;
-            margin-bottom: 12px;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #ff5733, #ffbd69);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         p {
             font-size: 1.1rem;
             margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .btn {
-            display: inline-block;
-            padding: 12px 22px;
-            margin: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 25px;
             border: none;
             border-radius: 25px;
-            font-size: 0.95rem;
-            color: #fff;
-            background: #ff5733;
+            font-size: 1rem;
+            color: var(--light);
+            background: var(--primary);
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            gap: 8px;
         }
 
         .btn:hover {
-            transform: translateY(-6px) scale(1.05);
+            transform: translateY(-6px);
             box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
         }
 
@@ -123,15 +417,118 @@
             transform: scale(0.95);
         }
 
+        .btn-secondary {
+            background: var(--secondary);
+        }
+
+        .btn-accent {
+            background: var(--accent);
+        }
+
+        /* Footer */
         footer {
             background: rgba(0, 0, 0, 0.6);
             text-align: center;
-            padding: 12px;
-            font-size: 0.85rem;
+            padding: 15px;
+            font-size: 0.9rem;
             backdrop-filter: blur(4px);
         }
 
-        /* Fullscreen Modal */
+        /* Help Button & Popup */
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--accent);
+            color: var(--light);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            bottom: 90px;
+            left: 20px;
+            max-width: 320px;
+            background: var(--light);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            z-index: 999;
+            animation: slideInLeft 0.4s ease;
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--accent);
+            color: var(--light);
+            padding: 12px 15px;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .popup-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .close-popup {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .popup-body {
+            padding: 15px;
+            font-size: 14px;
+            color: #333;
+            max-height: 300px;
+            overflow-y: auto;
+            line-height: 1.5;
+        }
+
+        .popup-body p {
+            margin-bottom: 10px;
+        }
+
+        .popup-footer {
+            padding: 12px 15px;
+            text-align: right;
+            border-top: 1px solid #eee;
+        }
+
+        .learn-more-btn {
+            background: var(--accent);
+            color: var(--light);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .learn-more-btn:hover {
+            background: #5a4fd9;
+        }
+
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -150,24 +547,270 @@
             position: relative;
             width: 100%;
             height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
         .modal-content iframe {
             width: 100%;
-            height: 100%;
+            max-width: 900px;
+            height: 80%;
             border: none;
+            border-radius: 12px;
         }
 
         .close-btn {
             position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: var(--light);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Niche Modal */
+        .niche-modal-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .niche-modal-content img {
+            max-width: 90%;
+            max-height: 90%;
+            width: auto;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* AI Importance Modal */
+        .ai-modal-content {
+            background: #111;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+            position: relative;
+            animation: popUp 0.4s forwards;
+        }
+
+        .ai-modal-content h2 {
+            color: var(--light);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .ai-modal-content p {
+            color: var(--light);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .ai-modal-content ul {
+            text-align: left;
+            color: var(--light);
+            margin-bottom: 25px;
+            padding-left: 20px;
+        }
+
+        .ai-modal-content li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        /* Affiliate Button */
+        .affiliate-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            padding: 16px 24px;
+            background: var(--secondary);
+            color: var(--light);
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+            z-index: 1500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .affiliate-btn:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Affiliate Modal */
+        .affiliate-modal-content {
+            background: #111;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
+            position: relative;
+            animation: popUp 0.4s forwards;
+        }
+
+        .affiliate-modal-content h2 {
+            color: var(--light);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .affiliate-modal-content img {
+            width: 90%;
+            max-width: 400px;
+            max-height: 310px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .affiliate-modal-content p {
+            color: var(--light);
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+
+        .cta-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .cta-btn {
+            background: var(--secondary);
+            color: var(--light);
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            display: inline-block;
+            width: 80%;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:nth-child(2) {
+            background: var(--accent);
+        }
+
+        .cta-btn:nth-child(3) {
+            background: #fdcb6e;
+            color: #111;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Workshop Popup Modal */
+        .workshop-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .workshop-content {
+            background: linear-gradient(135deg, #0f2027, #203a43);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            position: relative;
+            animation: scaleIn 0.5s ease;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .workshop-close {
+            position: absolute;
             top: 15px;
             right: 20px;
             font-size: 2rem;
+            color: var(--light);
             cursor: pointer;
-            color: #fff;
-            z-index: 100;
+            transition: all 0.3s ease;
         }
 
+        .workshop-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .workshop-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .workshop-content h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--light);
+        }
+
+        .workshop-content p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .workshop-cta {
+            background: var(--primary);
+            color: var(--light);
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 87, 51, 0.4);
+        }
+
+        .workshop-cta:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 87, 51, 0.5);
+        }
+
+        /* Animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -177,60 +820,491 @@
                 opacity: 1;
             }
         }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes popUp {
+            from {
+                transform: scale(0.8);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .header-right {
+                gap: 10px;
+            }
+
+            .social-media-btn,
+            .ai-importance-btn,
+            .niche-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 10px 15px;
+            }
+
+            .logo-container {
+                font-size: 16px;
+                padding: 8px 15px;
+            }
+
+            .logo-container img {
+                height: 35px;
+            }
+
+            .header-right {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .mobile-menu.active {
+                right: 0;
+            }
+
+            .close-menu {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                font-size: 2rem;
+                color: var(--light);
+                cursor: pointer;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .btn-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            .help-button {
+                bottom: 15px;
+                left: 15px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .popup {
+                left: 15px;
+                max-width: calc(100% - 30px);
+            }
+
+            .affiliate-btn {
+                bottom: 15px;
+                right: 15px;
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            .modal-content iframe {
+                height: 60%;
+            }
+
+            .workshop-content {
+                padding: 20px;
+            }
+
+            .workshop-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .workshop-content p {
+                font-size: 1rem;
+            }
+
+            .social-icons-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-box {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .logo-container {
+                font-size: 14px;
+            }
+
+            .logo-container img {
+                height: 30px;
+            }
+
+            .affiliate-modal-content {
+                padding: 20px;
+            }
+
+            .affiliate-modal-content h2 {
+                font-size: 1.3rem;
+            }
+
+            .cta-btn {
+                width: 100%;
+            }
+
+            .ai-modal-content {
+                padding: 20px;
+            }
+
+            .ai-modal-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .social-icons-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <!---------------left bottom ?------------------>
-    <!-- Help Button -->
-    <div id="helpButton" style="position: fixed; bottom: 20px; left: 20px; 
-            background: #007bff; color: #fff; 
-            border-radius: 50%; width: 50px; height: 50px; 
-            display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; font-size: 22px; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index:1000;">
-        ?
+    <!-- Mobile Menu Button -->
+    <button class="menu-toggle" id="menuToggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <span class="close-menu" id="closeMenu">&times;</span>
+        <div class="mobile-header-right">
+            <button class="mobile-social-btn" id="mobileSocialBtn">
+                <i class="fas fa-share-alt"></i> Social Media
+            </button>
+            <button class="mobile-ai-btn" id="mobileAiBtn">
+                <i class="fas fa-robot"></i> AI Importance
+            </button>
+            <button class="mobile-niche-btn" id="mobileNicheBtn">
+                <i class="fas fa-bullseye"></i> Niche Template
+            </button>
+        </div>
     </div>
 
-    <!-- Popup -->
-    <div id="popup" style="display: none; position: fixed; bottom: 90px; left: 20px; 
-            max-width: 320px; background: #fff; border-radius: 8px; 
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3); 
-            font-family: Arial, sans-serif; z-index:999;">
+    <!-- Social Media Popup -->
+    <div class="social-popup" id="socialPopup">
+        <span class="close-social" id="closeSocial">&times;</span>
+        <div class="social-popup-content">
+            <h3>Connect With Us</h3>
+            <div class="social-icons-grid">
+                <a href="https://www.facebook.com/profile.php?id=100015139065588" class="social-icon-item">
+                    <i class="fab fa-facebook-f facebook-icon"></i>
+                    <span>Facebook</span>
+                </a>
+                <a href="https://x.com/RizwanA96852028" class="social-icon-item">
+                    <i class="fab fa-twitter twitter-icon"></i>
+                    <span>Twitter</span>
+                </a>
+                <a href="https://www.instagram.com/rizwankhan1160/" class="social-icon-item">
+                    <i class="fab fa-instagram instagram-icon"></i>
+                    <span>Instagram</span>
+                </a>
+                <a href="https://www.linkedin.com/in/rizwan-ali-389660156/" class="social-icon-item">
+                    <i class="fab fa-linkedin-in linkedin-icon"></i>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://www.youtube.com/@ThisOne-007" class="social-icon-item">
+                    <i class="fab fa-youtube youtube-icon"></i>
+                    <span>YouTube</span>
+                </a>
+                <a href="https://api.whatsapp.com/send/?phone=9897511437&text=Hi%2C+I+saw+your+YouTube+video&app_absent=0"
+                    class="social-icon-item">
+                    <i class="fab fa-whatsapp whatsapp-icon"></i>
+                    <span>WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </div>
 
-        <div style="display: flex; justify-content: space-between; 
-                align-items: center; background: #007bff; 
-                color: #fff; padding: 10px; border-radius: 8px 8px 0 0;">
-            <h3 style="margin: 0; font-size: 16px;">About FastAPI</h3>
-            <button id="closePopup" style="background: none; border: none; color: #fff; 
-                       font-size: 18px; cursor: pointer;">&times;</button>
+    <header>
+        <div class="header-left">
+            <a href="https://khanriyazi.github.io/Graphic-Designer/" class="logo-container">
+                <img src="imgs/logo.png" alt="Workshop Logo">
+                <span>BCA Workshop</span>
+            </a>
         </div>
 
-        <div style="padding: 12px; font-size: 14px; color: #333; max-height: 300px; overflow-y: auto;">
+        <div class="header-right">
+            <button class="social-media-btn" id="socialMediaBtn">
+                <i class="fas fa-share-alt"></i> Social Media
+            </button>
+
+            <button class="ai-importance-btn" id="aiImportanceBtn">
+                <i class="fas fa-robot"></i> AI Importance
+            </button>
+
+            <button class="niche-btn" id="nicheBtn">
+                <i class="fas fa-bullseye"></i> Niche Template
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-box">
+            <h1>FastAPI Workshop</h1>
+            <p>For BCA 1st Year Students – Learn to build high-performance APIs with hands-on practice and real-world
+                projects</p>
+            <div class="btn-container">
+                <button class="btn" data-url="https://fastapi.tiangolo.com/">
+                    <i class="fas fa-book"></i> Documentation
+                </button>
+                <button class="btn btn-secondary" id="videoAdBtn">
+                    <i class="fas fa-play-circle"></i> Intro Video
+                </button>
+                <button class="btn btn-accent" id="formBtn">
+                    <i class="fas fa-edit"></i> Register Now
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2025 BCA Workshop. All Rights Reserved.
+    </footer>
+
+    <!-- Help Button -->
+    <div class="help-button" id="helpButton">
+        <i class="fas fa-question"></i>
+    </div>
+
+    <!-- Help Popup -->
+    <div class="popup" id="popup">
+        <div class="popup-header">
+            <h3>About FastAPI</h3>
+            <button class="close-popup" id="closePopup">&times;</button>
+        </div>
+        <div class="popup-body">
             <p><strong>FastAPI</strong> is a modern, fast (high-performance) web framework for building APIs with Python
                 3.7+ based on standard Python type hints.</p>
             <p>It's one of the fastest Python frameworks available, on par with NodeJS and Go thanks to Starlette and
                 Pydantic.</p>
+            <p>Key features include:</p>
+            <ul>
+                <li>Fast to code: Increase development speed by 200-300%</li>
+                <li>Fewer bugs: Reduce about 40% of human-induced errors</li>
+                <li>Intuitive: Great editor support with completion everywhere</li>
+                <li>Easy: Designed to be easy to use and learn</li>
+                <li>Short: Minimize code duplication</li>
+                <li>Robust: Get production-ready code with automatic interactive documentation</li>
+            </ul>
         </div>
-
-        <div style="padding: 10px; text-align: right;">
-            <button id="learnMoreBtn" style="background: #007bff; color: #fff; 
-                       border: none; padding: 6px 12px; 
-                       border-radius: 4px; cursor: pointer;">Learn More</button>
+        <div class="popup-footer">
+            <button class="learn-more-btn" id="learnMoreBtn">Learn More</button>
         </div>
     </div>
 
-    <!-- Inline Vanilla JS -->
+    <!-- YouTube Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeVideo">&times;</span>
+            <iframe id="youtubeFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- Niche Modal -->
+    <div class="modal" id="nicheModal">
+        <div class="niche-modal-content">
+            <span class="close-btn" id="closeNiche">&times;</span>
+            <img src="imgs/background.png" alt="Niche Template">
+        </div>
+    </div>
+
+    <!-- AI Importance Modal -->
+    <div class="modal" id="aiModal">
+        <div class="modal-content">
+            <div class="ai-modal-content">
+                <span class="close-btn" id="closeAi">&times;</span>
+                <h2>Why Artificial Intelligence Matters</h2>
+                <p>Artificial Intelligence is transforming our world and revolutionizing how we interact with
+                    technology. Here's why AI is critically important:</p>
+
+                <ul>
+                    <li><strong>Automation:</strong> AI can automate repetitive tasks, freeing up humans for more
+                        creative and strategic work.</li>
+                    <li><strong>Data Analysis:</strong> AI algorithms can process and analyze vast amounts of data much
+                        faster than humans.</li>
+                    <li><strong>Personalization:</strong> AI powers personalized experiences in everything from shopping
+                        to content recommendations.</li>
+                    <li><strong>Problem Solving:</strong> AI can solve complex problems that are beyond human
+                        capabilities.</li>
+                    <li><strong>Innovation:</strong> AI drives innovation across industries including healthcare,
+                        finance, and education.</li>
+                    <li><strong>Efficiency:</strong> AI systems can work 24/7 without fatigue, increasing productivity.
+                    </li>
+                </ul>
+
+                <p>Learning AI technologies like FastAPI puts you at the forefront of this technological revolution!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Modal -->
+    <div class="modal" id="formModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeForm">&times;</span>
+            <iframe
+                src="https://docs.google.com/forms/d/e/1FAIpQLScQtwHDBt8MjhdQiblobIkaSaUOrB7vLK4a_xpg5hgnwYg2QQ/viewform?embedded=true"
+                width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+        </div>
+    </div>
+
+    <!-- Affiliate Button -->
+    <button class="affiliate-btn" id="affiliateBtn">
+        <i class="fas fa-briefcase"></i> Exclusive Deals
+    </button>
+
+    <!-- Affiliate Modal -->
+    <div class="modal" id="affiliateModal">
+        <div class="modal-content">
+            <div class="affiliate-modal-content">
+                <span class="close-btn" id="closeAffiliate">&times;</span>
+                <h2>Top Affiliate Deals for Workshop Students!</h2>
+                <img src="imgs/background.png" alt="Product Example">
+                <p>Grab these amazing deals to enhance your learning with FastAPI, Web Development & Tech tools.</p>
+                <div class="cta-container">
+                    <a href="https://www.amazon.in" target="_blank" class="cta-btn">
+                        <i class="fab fa-amazon"></i> Amazon Deals
+                    </a>
+                    <a href="https://www.udemy.com" target="_blank" class="cta-btn">
+                        <i class="fab fa-udemy"></i> Udemy Courses
+                    </a>
+                    <a href="https://www.hostinger.in" target="_blank" class="cta-btn">
+                        <i class="fas fa-server"></i> Hostinger Hosting
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Workshop Popup Modal -->
+    <div class="workshop-popup" id="workshopPopup">
+        <div class="workshop-content">
+            <span class="workshop-close" id="closeWorkshopPopup">&times;</span>
+            <div class="workshop-icon">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <h2>Transform Your Coding Skills!</h2>
+            <p>Join our exclusive FastAPI workshop designed specifically for BCA 1st year students. Learn to build
+                high-performance APIs that will set you apart in the competitive tech industry.</p>
+            <p><strong>Limited seats available!</strong> Register now to secure your spot.</p>
+            <a href="#" class="workshop-cta" id="workshopCta">Register Now <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+
     <script>
+        // DOM Elements
         const helpButton = document.getElementById("helpButton");
         const popup = document.getElementById("popup");
         const closePopup = document.getElementById("closePopup");
         const learnMoreBtn = document.getElementById("learnMoreBtn");
+        const menuToggle = document.getElementById("menuToggle");
+        const mobileMenu = document.getElementById("mobileMenu");
+        const closeMenu = document.getElementById("closeMenu");
+        const socialMediaBtn = document.getElementById("socialMediaBtn");
+        const mobileSocialBtn = document.getElementById("mobileSocialBtn");
+        const socialPopup = document.getElementById("socialPopup");
+        const closeSocial = document.getElementById("closeSocial");
+        const aiImportanceBtn = document.getElementById("aiImportanceBtn");
+        const mobileAiBtn = document.getElementById("mobileAiBtn");
+        const nicheBtn = document.getElementById("nicheBtn");
+        const mobileNicheBtn = document.getElementById("mobileNicheBtn");
+        const videoBtn = document.getElementById("videoAdBtn");
+        const videoModal = document.getElementById("videoModal");
+        const closeVideo = document.getElementById("closeVideo");
+        const youtubeFrame = document.getElementById("youtubeFrame");
+        const nicheModal = document.getElementById("nicheModal");
+        const closeNiche = document.getElementById("closeNiche");
+        const aiModal = document.getElementById("aiModal");
+        const closeAi = document.getElementById("closeAi");
+        const formBtn = document.getElementById("formBtn");
+        const formModal = document.getElementById("formModal");
+        const closeForm = document.getElementById("closeForm");
+        const affiliateBtn = document.getElementById("affiliateBtn");
+        const affiliateModal = document.getElementById("affiliateModal");
+        const closeAffiliate = document.getElementById("closeAffiliate");
+        const workshopPopup = document.getElementById("workshopPopup");
+        const closeWorkshopPopup = document.getElementById("closeWorkshopPopup");
+        const workshopCta = document.getElementById("workshopCta");
 
+        // Help Popup functionality
         helpButton.addEventListener("click", () => {
             popup.style.display = "block";
-
-            // Ensure popup fits within screen width
             const rect = popup.getBoundingClientRect();
             if (rect.right > window.innerWidth) {
                 popup.style.left = (window.innerWidth - rect.width - 20) + "px";
@@ -244,249 +1318,47 @@
         learnMoreBtn.addEventListener("click", () => {
             window.open("main.html", "_blank");
         });
-    </script>
 
-    <!---------------left bottom ?------------------>
-    <header>
-        <a href="https://khanriyazi.github.io/Graphic-Designer/" style="text-decoration: none;">
-            <div style="
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 20px;
-        background: linear-gradient(135deg, #4CAF50, #2E7D32);
-        color: white;
-        font-weight: bold;
-        font-size: 18px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-        transition: transform 0.2s, box-shadow 0.2s;
-        cursor: pointer;
-        width: fit-content;
-    " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 10px rgba(0,0,0,0.3)';"
-                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 6px rgba(0,0,0,0.2)';">
-                <img src="imgs/logo.png" alt="Workshop Logo" style="height:40px; width:auto;">
-                BCA Workshop
-            </div>
-        </a>
-
-
-        <button class="niche-btn" id="nicheBtn">🎯 Niche Template</button>
-    </header>
-
-    <main>
-        <div class="content-box">
-            <h1>FastAPI Workshop</h1>
-            <p>For BCA 1st Year Students – Learn APIs with Hands-on Practice</p>
-            <div>
-                <button class="btn" data-url="https://fastapi.tiangolo.com/">Docs</button>
-                <button class="btn" id="videoAdBtn">🎥 Intro Video</button>
-                <button class="btn" id="formBtn">📝 Register</button>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        &copy; 2025 BCA Workshop. All Rights Reserved.
-    </footer>
-
-    <!-- YouTube Modal -->
-    <div class="modal" id="videoModal">
-        <div class="modal-content">
-            <span class="close-btn" id="closeVideo">&times;</span>
-            <iframe id="youtubeFrame" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <!-- Niche Modal -->
-    <!-- Niche Modal -->
-    <div class="modal" id="nicheModal">
-        <div class="modal-content" style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        padding: 20px;
-    ">
-            <span class="close-btn" id="closeNiche">&times;</span>
-            <img src="imgs/background.png" alt="Niche Template" style="
-            max-width: 90%;
-            max-height: 90%;
-            width: auto;
-            height: auto;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-        ">
-        </div>
-    </div>
-
-
-    <!-- Google Form Modal -->
-    <div class="modal" id="formModal">
-        <div class="modal-content">
-            <span class="close-btn" id="closeForm">&times;</span>
-            <iframe
-                src="https://docs.google.com/forms/d/e/1FAIpQLScQtwHDBt8MjhdQiblobIkaSaUOrB7vLK4a_xpg5hgnwYg2QQ/viewform?usp=sharing&ouid=114327715657916202451?embedded=true"
-                width="100%" height="600" frameborder="0" marginheight="0" marginwidth="0"
-                style="border:none; border-radius:12px;">
-            </iframe>
-        </div>
-    </div>
-
-    <!-----------------------affiliate pop up---------------------->
-    <!-- Affiliate Marketing Button -->
-    <!-- Affiliate Marketing Button -->
-    <button id="affiliateBtn" style="
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    padding: 16px 24px;
-    background: #00b894;
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-    z-index: 1500;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-">💼 Explore Affiliate Deals</button>
-
-    <!-- Affiliate Modal -->
-    <div class="modal" id="affiliateModal" style="
-    display:none;
-    position: fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: rgba(0,0,0,0.85);
-    justify-content:center;
-    align-items:center;
-    z-index:2000;
-    animation: fadeIn 0.3s ease;
-">
-        <div style="
-        background: #111;
-        padding: 25px;
-        border-radius: 20px;
-        width: 90%;
-        max-width: 500px;
-        text-align: center;
-        box-shadow: 0 12px 35px rgba(0,0,0,0.6);
-        position: relative;
-        transform: scale(0.8);
-        animation: popUp 0.4s forwards;
-    ">
-            <!-- Close button -->
-            <span id="closeAffiliate" style="
-            position:absolute;
-            top:12px;
-            right:15px;
-            font-size:1.8rem;
-            cursor:pointer;
-            color:#fff;
-        ">&times;</span>
-
-            <!-- Brand Logo
-            <img src="https://cdn-icons-png.flaticon.com/512/2721/2721299.png" alt="Workshop Logo"
-                style="width:60px; margin-bottom:15px;"> -->
-
-            <!-- Headline -->
-            <h2 style="color:#fff; margin-bottom:15px;">Top Affiliate Deals for Workshop Students!</h2>
-
-            <!-- Product Image -->
-            <img src="imgs/background.png" alt="Product Example"
-                style="width:90%; max-width:400px; max-height:310px; object-fit:cover; border-radius:12px; margin-bottom:15px;">
-
-
-            <!-- Short Description -->
-            <p style="color:#fff; font-size:0.95rem; margin-bottom:20px;">
-                Grab these amazing deals to enhance your learning with FastAPI, Web Development & Tech tools.
-            </p>
-
-            <!-- CTA Buttons -->
-            <div style="display:flex; flex-direction:column; gap:10px; align-items:center;">
-                <a href="https://www.amazon.in" target="_blank" style="
-                background:#00b894; color:#fff; text-decoration:none;
-                padding:12px 25px; border-radius:25px; display:inline-block;
-                width:80%; text-align:center; transition:transform 0.3s ease;
-            " class="cta-btn">Amazon Deals</a>
-
-                <a href="https://www.udemy.com" target="_blank" style="
-                background:#6c5ce7; color:#fff; text-decoration:none;
-                padding:12px 25px; border-radius:25px; display:inline-block;
-                width:80%; text-align:center; transition:transform 0.3s ease;
-            " class="cta-btn">Udemy Courses</a>
-
-                <a href="https://www.hostinger.in" target="_blank" style="
-                background:#fdcb6e; color:#111; text-decoration:none;
-                padding:12px 25px; border-radius:25px; display:inline-block;
-                width:80%; text-align:center; transition:transform 0.3s ease;
-            " class="cta-btn">Hostinger Hosting</a>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const affiliateBtn = document.getElementById("affiliateBtn");
-        const affiliateModal = document.getElementById("affiliateModal");
-        const closeAffiliate = document.getElementById("closeAffiliate");
-
-        affiliateBtn.addEventListener("click", () => {
-            affiliateModal.style.display = "flex";
+        // Mobile menu functionality
+        menuToggle.addEventListener("click", () => {
+            mobileMenu.classList.toggle("active");
         });
 
-        closeAffiliate.addEventListener("click", () => {
-            affiliateModal.style.display = "none";
+        closeMenu.addEventListener("click", () => {
+            mobileMenu.classList.remove("active");
         });
 
-        window.addEventListener("click", e => {
-            if (e.target === affiliateModal) affiliateModal.style.display = "none";
-        });
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const isClickInsideMenu = mobileMenu.contains(e.target);
+            const isClickOnToggle = menuToggle.contains(e.target);
 
-        // Suspensive hover effect
-        affiliateBtn.addEventListener("mouseenter", () => {
-            affiliateBtn.style.transform = "translateY(-6px) scale(1.1)";
-            affiliateBtn.style.boxShadow = "0 12px 25px rgba(0,0,0,0.4)";
-        });
-        affiliateBtn.addEventListener("mouseleave", () => {
-            affiliateBtn.style.transform = "";
-            affiliateBtn.style.boxShadow = "0 6px 18px rgba(0,0,0,0.35)";
-        });
-
-        document.querySelectorAll('.cta-btn').forEach(btn => {
-            btn.addEventListener("mouseenter", () => btn.style.transform = "translateY(-4px) scale(1.05)");
-            btn.addEventListener("mouseleave", () => btn.style.transform = "scale(1)");
-        });
-    </script>
-
-    <style>
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
+            if (!isClickInsideMenu && !isClickOnToggle && mobileMenu.classList.contains('active')) {
+                mobileMenu.classList.remove('active');
             }
+        });
 
-            to {
-                opacity: 1;
+        // Social media popup functionality
+        socialMediaBtn.addEventListener("click", () => {
+            socialPopup.style.display = "block";
+        });
+
+        mobileSocialBtn.addEventListener("click", () => {
+            socialPopup.style.display = "block";
+            mobileMenu.classList.remove("active");
+        });
+
+        closeSocial.addEventListener("click", () => {
+            socialPopup.style.display = "none";
+        });
+
+        // Close social popup when clicking outside
+        window.addEventListener("click", (e) => {
+            if (e.target === socialPopup) {
+                socialPopup.style.display = "none";
             }
-        }
+        });
 
-        @keyframes popUp {
-            from {
-                transform: scale(0.8);
-            }
-
-            to {
-                transform: scale(1);
-            }
-        }
-    </style>
-
-
-    <!-----------------------affiliate pop up---------------------->
-
-    <script>
         // External links
         document.querySelectorAll('.btn[data-url]').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -495,49 +1367,89 @@
         });
 
         // Video modal
-        const videoBtn = document.getElementById("videoAdBtn");
-        const videoModal = document.getElementById("videoModal");
-        const closeVideo = document.getElementById("closeVideo");
-        const youtubeFrame = document.getElementById("youtubeFrame");
-
         videoBtn.addEventListener("click", () => {
             videoModal.style.display = "flex";
             youtubeFrame.src = "https://www.youtube.com/embed/urR596FsU68?autoplay=1";
         });
+
         closeVideo.addEventListener("click", () => {
             videoModal.style.display = "none";
             youtubeFrame.src = "";
         });
 
         // Niche modal
-        const nicheBtn = document.getElementById("nicheBtn");
-        const nicheModal = document.getElementById("nicheModal");
-        const closeNiche = document.getElementById("closeNiche");
-
         nicheBtn.addEventListener("click", () => {
             nicheModal.style.display = "flex";
         });
+
+        mobileNicheBtn.addEventListener("click", () => {
+            nicheModal.style.display = "flex";
+            mobileMenu.classList.remove("active");
+        });
+
         closeNiche.addEventListener("click", () => {
             nicheModal.style.display = "none";
         });
 
-        // Form modal
-        const formBtn = document.getElementById("formBtn");
-        const formModal = document.getElementById("formModal");
-        const closeForm = document.getElementById("closeForm");
+        // AI Importance modal
+        aiImportanceBtn.addEventListener("click", () => {
+            aiModal.style.display = "flex";
+        });
 
+        mobileAiBtn.addEventListener("click", () => {
+            aiModal.style.display = "flex";
+            mobileMenu.classList.remove("active");
+        });
+
+        closeAi.addEventListener("click", () => {
+            aiModal.style.display = "none";
+        });
+
+        // Form modal
         formBtn.addEventListener("click", () => {
             formModal.style.display = "flex";
         });
+
         closeForm.addEventListener("click", () => {
             formModal.style.display = "none";
         });
 
-        // Close modal when clicking outside
+        // Affiliate modal
+        affiliateBtn.addEventListener("click", () => {
+            affiliateModal.style.display = "flex";
+        });
+
+        closeAffiliate.addEventListener("click", () => {
+            affiliateModal.style.display = "none";
+        });
+
+        // Workshop popup - show after 3 seconds
+        setTimeout(() => {
+            workshopPopup.style.display = "flex";
+        }, 3000);
+
+        closeWorkshopPopup.addEventListener("click", () => {
+            workshopPopup.style.display = "none";
+        });
+
+        workshopCta.addEventListener("click", (e) => {
+            e.preventDefault();
+            workshopPopup.style.display = "none";
+            formModal.style.display = "flex";
+        });
+
+        // Close modals when clicking outside
         window.addEventListener("click", e => {
-            if (e.target === videoModal) { videoModal.style.display = "none"; youtubeFrame.src = ""; }
+            if (e.target === videoModal) {
+                videoModal.style.display = "none";
+                youtubeFrame.src = "";
+            }
             if (e.target === nicheModal) nicheModal.style.display = "none";
+            if (e.target === aiModal) aiModal.style.display = "none";
             if (e.target === formModal) formModal.style.display = "none";
+            if (e.target === affiliateModal) affiliateModal.style.display = "none";
+            if (e.target === workshopPopup) workshopPopup.style.display = "none";
+            if (e.target === popup) popup.style.display = "none";
         });
     </script>
 </body>
