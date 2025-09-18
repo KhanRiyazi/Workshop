@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>10 Hacks to Master FastAPI — Interactive</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #0ea5e9;
+            --muted: #94a3b8;
+            --panel: #0b1220;
+            --surface: #111827;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Roboto, system-ui, sans-serif;
+            background: linear-gradient(135deg, var(--bg), #0b1220);
+            color: #e6eef8;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(90deg, var(--accent), #0369a1);
+            padding: 18px 20px;
+            border-bottom: 4px solid rgba(255, 255, 255, 0.06);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 20px
+        }
+
+        header p {
+            margin: 6px 0 0;
+            font-size: 13px;
+            color: var(--surface)
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 20px auto;
+            width: 94%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            align-content: start;
+            padding-bottom: 40px;
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 14px;
+            box-shadow: 0 8px 20px rgba(2, 6, 23, 0.6);
+        }
+
+        .card h2 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--accent)
+        }
+
+        .card .meta {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px
+        }
+
+        .expand-btn {
+            background: var(--accent);
+            color: #022632;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+        }
+
+        .expand-btn:hover {
+            filter: brightness(.94)
+        }
+
+        /* popup panel (in-flow) */
+        .popup {
+            margin-top: 12px;
+            border-radius: 10px;
+            background: linear-gradient(180deg, var(--panel), #07101a);
+            border: 1px solid rgba(14, 165, 233, 0.12);
+            padding: 10px;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height .32s ease, opacity .32s ease;
+            opacity: 0;
+        }
+
+        .popup.open {
+            max-height: 800px;
+            opacity: 1
+        }
+
+        .popup h3 {
+            margin: 0 0 6px 0;
+            color: #9fe8ff
+        }
+
+        .sub-item {
+            margin-top: 8px
+        }
+
+        .sub-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            color: #dbeafe;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .sub-btn+.sub-btn {
+            margin-top: 8px
+        }
+
+        .sub-btn .label {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        /* nested sub-panel (in-flow, non-overlapping) */
+        .sub-panel {
+            margin-top: 8px;
+            padding: 10px;
+            border-left: 4px solid rgba(14, 165, 233, 0.18);
+            background: linear-gradient(180deg, #08121a, #07121a);
+            border-radius: 8px;
+            color: #cfe9ff;
+            font-size: 13px;
+            display: none;
+        }
+
+        .sub-panel.open {
+            display: block
+        }
+
+        pre.snippet {
+            background: #02111a;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            overflow: auto;
+            color: #cbe7ff;
+            margin: 8px 0;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px
+        }
+
+        .btn-action {
+            background: #1f2a36;
+            color: #e6f6ff;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 12px 16px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            border-top: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        /* responsive */
+        @media (min-width:720px) {
+            main {
+                grid-template-columns: repeat(2, 1fr)
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>🚀 10 Hacks to Master FastAPI</h1>
+        <p>Interactive ChatGPT-style learning panels — tap a hack, then explore nested lessons.</p>
+    </header>
+
+    <main id="main">
+        <!-- Card 1: Small APIs -->
+        <section class="card" data-hack="build-small-apis">
+            <h2>1. Build Small APIs Daily</h2>
+            <div class="meta">Practice micro-APIs to build muscle memory.</div>
+
+            <div class="row">
+                <button class="expand-btn" aria-expanded="false">⚡ Explore</button>
+            </div>
+
+            <div class="popup" aria-hidden="true">
+                <h3>Mini Challenges</h3>
+
+                <!-- Calculator -->
+                <div class="sub-item">
+                    <button class="sub-btn" aria-expanded="false">
+                        <span class="label">📌 Calculator API</span>
+                        <span class="chev">▶</span>
+                    </button>
+                    <div class="sub-panel" aria-hidden="true">
+                        <div><strong>Goal:</strong> Create endpoints for add, subtract, multiply, divide.</div>
+                        <pre class="snippet"># FastAPI sample (calculator)
+from fastapi import FastAPI
+app = FastAPI()
+
+@app.get("/add")
+def add(a: float, b: float):
+    return {"result": a + b}</pre>
+
+                        <div class="actions">
+                            <button class="btn-action js-copy">Copy snippet</button>
+                            <button class="btn-action js-run">Try locally</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weather -->
+                <div class="sub-item">
+                    <button class="sub-btn" aria-expanded="false">
+                        <span class="label">🌦 Weather API</span>
+                        <span class="chev">▶</span>
+                    </button>
+                    <div class="sub-panel" aria-hidden="true">
+                        <div><strong>Goal:</strong> Use query params like <code>?city=Delhi</code> and return mock
+                            weather.</div>
+                        <pre class="snippet"># Example: /weather?city=Delhi
+@app.get("/weather")
+def weather(city: str = "Delhi"):
+    return {"city": city, "temp_c": 29.5, "condition": "Sunny"}</pre>
+                        <div class="actions">
+                            <button class="btn-action js-copy">Copy snippet</button>
+                            <button class="btn-action js-open-doc">Open docs</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Todo -->
+                <div class="sub-item">
+                    <button class="sub-btn" aria-expanded="false">
+                        <span class="label">📝 Todo API</span>
+                        <span class="chev">▶</span>
+                    </button>
+                    <div class="sub-panel" aria-hidden="true">
+                        <div><strong>Goal:</strong> Implement CRUD for todo items (in-memory first).</div>
+                        <pre class="snippet"># Minimal todo (in-memory)
+todos = []
+@app.post("/todos")
+def create(todo: dict):
+    todos.append(todo); return todo</pre>
+                        <div class="actions">
+                            <button class="btn-action js-copy">Copy snippet</button>
+                            <button class="btn-action js-open-todo">Open todo guide</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Card 2: Swagger -->
+        <section class="card" data-hack="swagger">
+            <h2>2. Use Swagger UI Playground</h2>
+            <div class="meta">Leverage /docs as your interactive Postman.</div>
+
+            <div class="row">
+                <button class="expand-btn">⚡ Explore</button>
+            </div>
+
+            <div class="popup">
+                <h3>Try It Out</h3>
+
+                <div class="sub-item">
+                    <button class="sub-btn">
+                        <span class="label">🔍 Open /docs</span>
+                        <span class="chev">▶</span>
+                    </button>
+                    <div class="sub-panel">
+                        <div>Open <code>/docs</code> for live request/response testing. No external tool needed.</div>
+                        <div class="actions">
+                            <button class="btn-action js-open-doc">Open docs</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-item">
+                    <button class="sub-btn">
+                        <span class="label">⚙ Test POST Request</span>
+                        <span class="chev">▶</span>
+                    </button>
+                    <div class="sub-panel">
+                        <div>Try sending JSON bodies and inspect validation errors returned by Pydantic.</div>
+                        <div class="actions">
+                            <button class="btn-action js-copy">Example body</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-item">
+                    <button class="sub-btn">
+                        <span class="label">📊 Check Response</span>
+                        <span class="chev">▶</span>
+                    </button>
+                    <div class="sub-panel">
+                        <div>Use response models to keep consistent JSON structure and docs.</div>
+                        <div class="actions">
+                            <button class="btn-action js-learn-response">Learn more</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Add more cards for hacks 3..10 similarly -->
+    </main>
+
+    <footer>
+        Made with ❤️ by Rizwan — FastAPI Kaizen Path
+    </footer>
+
+    <script>
+        // Helpers
+        const closeAll = () => {
+            document.querySelectorAll('.popup.open').forEach(p => p.classList.remove('open'));
+            document.querySelectorAll('.sub-panel.open').forEach(sp => sp.classList.remove('open'));
+            document.querySelectorAll('.expand-btn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+            document.querySelectorAll('.sub-btn[aria-expanded="true"]').forEach(b => b.setAttribute('aria-expanded', 'false'));
+        };
+
+        // Toggle card-level popup
+        document.querySelectorAll('.card').forEach(card => {
+            const expand = card.querySelector('.expand-btn');
+            const popup = card.querySelector('.popup');
+
+            if (!expand || !popup) return;
+
+            expand.addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                const isOpen = popup.classList.contains('open');
+                // close others if you want single-open behavior:
+                // closeAll();
+                if (isOpen) {
+                    popup.classList.remove('open');
+                    expand.setAttribute('aria-expanded', 'false');
+                } else {
+                    popup.classList.add('open');
+                    expand.setAttribute('aria-expanded', 'true');
+                    // scroll into view a bit to show the opened panel
+                    popup.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+        });
+
+        // Toggle sub-panels (nested)
+        document.querySelectorAll('.card .sub-item').forEach(item => {
+            const btn = item.querySelector('.sub-btn');
+            const panel = item.querySelector('.sub-panel');
+            if (!btn || !panel) return;
+
+            btn.addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                const parentPopup = item.closest('.popup');
+                // close other sub-panels inside same popup
+                parentPopup.querySelectorAll('.sub-panel.open').forEach(sp => {
+                    if (sp !== panel) sp.classList.remove('open');
+                });
+                const isOpen = panel.classList.contains('open');
+                if (isOpen) {
+                    panel.classList.remove('open');
+                    btn.setAttribute('aria-expanded', 'false');
+                    btn.querySelector('.chev').textContent = '▶';
+                } else {
+                    panel.classList.add('open');
+                    btn.setAttribute('aria-expanded', 'true');
+                    btn.querySelector('.chev').textContent = '▼';
+                    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+        });
+
+        // Actions: copy snippet
+        document.addEventListener('click', (e) => {
+            const cp = e.target.closest('.js-copy');
+            if (cp) {
+                // find nearest pre.snippet
+                const pre = cp.closest('.sub-panel').querySelector('.snippet');
+                if (pre) {
+                    navigator.clipboard?.writeText(pre.textContent.trim()).then(() => {
+                        cp.textContent = 'Copied ✓';
+                        setTimeout(() => cp.textContent = 'Copy snippet', 1400);
+                    }).catch(() => {
+                        cp.textContent = 'Copy failed';
+                        setTimeout(() => cp.textContent = 'Copy snippet', 1400);
+                    });
+                }
+                e.stopPropagation();
+            }
+
+            // placeholder actions
+            const run = e.target.closest('.js-run');
+            if (run) {
+                alert('Run locally: save file and start with `uvicorn filename:app --reload`');
+                e.stopPropagation();
+            }
+
+            const openDoc = e.target.closest('.js-open-doc');
+            if (openDoc) {
+                alert('Open your app at http://127.0.0.1:8000/docs after running FastAPI with Uvicorn.');
+                e.stopPropagation();
+            }
+
+            const openTodo = e.target.closest('.js-open-todo');
+            if (openTodo) {
+                alert('Todo guide: implement in-memory store, then upgrade to SQLite + SQLAlchemy.');
+                e.stopPropagation();
+            }
+        });
+
+        // Close all when clicking outside any card
+        document.addEventListener('click', (e) => {
+            const inCard = !!e.target.closest('.card');
+            if (!inCard) closeAll();
+        });
+
+        // Close on ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeAll();
+        });
+
+        // Prevent clicks inside popup from closing via global handler
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', (e) => e.stopPropagation());
+        });
+
+    </script>
+</body>
+
+</html>
