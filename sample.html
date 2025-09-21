@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastAPI Learning Journey - SOLID Version</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(90deg, #009688, #4caf50);
+            color: #fff;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section {
+            background: #fff;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .section-header {
+            cursor: pointer;
+            padding: 1rem;
+            background: #009688;
+            color: #fff;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .section-header:hover {
+            background: #00796b;
+        }
+
+        .section-content {
+            display: none;
+            padding: 1rem 1.5rem;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.7rem 1.2rem;
+            background: #009688;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #00796b;
+        }
+
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            height: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #009688;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>🚀 FastAPI Learning Journey</h1>
+        <p>Using SOLID Principles for Modern Learning</p>
+    </header>
+
+    <main>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div id="sectionsContainer"></div>
+    </main>
+
+    <script>
+        class ProgressTracker {
+            constructor(totalSteps, progressBarId) {
+                this.totalSteps = totalSteps;
+                this.completedSteps = JSON.parse(localStorage.getItem('completedSteps')) || {};
+                this.progressBar = document.getElementById(progressBarId);
+                this.updateProgressBar();
+            }
+
+            markComplete(index) {
+                this.completedSteps[index] = true;
+                localStorage.setItem('completedSteps', JSON.stringify(this.completedSteps));
+                this.updateProgressBar();
+            }
+
+            updateProgressBar() {
+                const completedCount = Object.values(this.completedSteps).filter(Boolean).length;
+                const percent = (completedCount / this.totalSteps) * 100;
+                this.progressBar.style.width = `${percent}%`;
+            }
+
+            isCompleted(index) {
+                return !!this.completedSteps[index];
+            }
+        }
+
+        class Section {
+            constructor(stepData, index, progressTracker) {
+                this.stepData = stepData;
+                this.index = index;
+                this.progressTracker = progressTracker;
+                this.element = this.createSection();
+            }
+
+            createSection() {
+                const section = document.createElement('div');
+                section.classList.add('section');
+
+                section.innerHTML = `
+      <div class="section-header">${this.stepData.title} <span>+</span></div>
+      <div class="section-content">
+        <p>${this.stepData.content}</p>
+        ${this.stepData.link ? `<a href="${this.stepData.link}" target="_blank" class="btn">Learn More</a>` : ''}
+        <button class="btn mark-complete">${this.progressTracker.isCompleted(this.index) ? 'Completed ✓' : 'Mark Complete'}</button>
+      </div>
+    `;
+
+                this.initEvents(section);
+                return section;
+            }
+
+            initEvents(section) {
+                const header = section.querySelector('.section-header');
+                const content = section.querySelector('.section-content');
+                const icon = header.querySelector('span');
+                const completeBtn = section.querySelector('.mark-complete');
+
+                if (this.progressTracker.isCompleted(this.index)) content.style.display = 'block';
+
+                header.addEventListener('click', () => {
+                    const isOpen = content.style.display === 'block';
+                    document.querySelectorAll('.section-content').forEach(c => c.style.display = 'none');
+                    document.querySelectorAll('.section-header span').forEach(i => i.textContent = '+');
+                    if (!isOpen) { content.style.display = 'block'; icon.textContent = '−'; }
+                });
+
+                completeBtn.addEventListener('click', () => {
+                    if (!this.progressTracker.isCompleted(this.index)) {
+                        this.progressTracker.markComplete(this.index);
+                        completeBtn.textContent = 'Completed ✓';
+                        completeBtn.disabled = true;
+                    }
+                });
+            }
+        }
+
+        // App Initialization
+        class LearningApp {
+            constructor(steps) {
+                this.steps = steps;
+                this.progressTracker = new ProgressTracker(this.steps.length, 'progressBar');
+                this.container = document.getElementById('sectionsContainer');
+                this.initSections();
+            }
+
+            initSections() {
+                this.steps.forEach((step, index) => {
+                    const section = new Section(step, index, this.progressTracker);
+                    this.container.appendChild(section.element);
+                });
+            }
+        }
+
+        const stepsData = [
+            { title: 'Step 1: Foundations', content: 'Refresh Python skills, explore Pydantic.', link: 'https://fastapi.tiangolo.com/' },
+            { title: 'Step 2: Hello FastAPI', content: 'Install FastAPI + Uvicorn and create your first app.', link: 'https://fastapi.tiangolo.com/tutorial/' },
+            { title: 'Step 3: Core Concepts', content: 'Learn path & query params, request/response models, dependencies.', link: 'https://fastapi.tiangolo.com/tutorial/path-params/' },
+            { title: 'Step 4: Mini Challenges', content: 'Build small APIs: Calculator, Weather, Todo.' },
+            { title: 'Step 5: Database & ORM', content: 'Use SQLite + SQLAlchemy or SQLModel.', link: 'https://sqlmodel.tiangolo.com/' },
+            { title: 'Step 6: Authentication', content: 'Secure your API with JWT and OAuth2.', link: 'https://fastapi.tiangolo.com/tutorial/security/' },
+            { title: 'Step 7: Production Skills', content: 'Learn testing, middleware, CORS, and deployment with Docker + Gunicorn.' },
+            { title: 'Step 8: Portfolio Projects', content: 'Create Blog API, Task Manager, or AI Wrapper API.' },
+            { title: 'Step 9: Frontend Integration', content: 'Connect backend to React, Vue, or JS frontend.' },
+            { title: 'Step 10: Deploy & Share', content: 'Deploy to Render, Railway, or DigitalOcean.' }
+        ];
+
+        new LearningApp(stepsData);
+    </script>
+
+</body>
+
+</html>
